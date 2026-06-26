@@ -175,7 +175,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="date" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
                   <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(val) => `${(val/1000).toFixed(0)}k`} />
                   <Tooltip 
-                    formatter={(value: number) => [formatPYG(value), 'Ingresos']}
+                    formatter={(value: any) => [formatPYG(Number(value)), 'Ingresos']}
                     contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #222', borderRadius: '15px' }}
                   />
                   <Line type="monotone" dataKey="amount" stroke="#10b981" strokeWidth={4} dot={{ r: 4, fill: '#10b981' }} />
