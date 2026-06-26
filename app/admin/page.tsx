@@ -20,6 +20,12 @@ interface CategoryNode {
   fullName: string;
   children: Record<string, CategoryNode>;
 }
+
+interface Category {
+  id: string;
+  name: string;
+  parent_id: string | null;
+}
 // ─── Modal genérico ───────────────────────────────────────────────────────────
 const Modal = ({ isOpen, onClose, onConfirm, title, message, type = 'confirm' }: any) => {
   if (!isOpen) return null;
@@ -135,6 +141,7 @@ const InlineCategoryManager = ({
 }: {
   categoryTree: Record<string, CategoryNode>;
   onRefresh: () => Promise<void>;
+  onSelectCategory: (fullName: string) => void;
 }) => {
   const [parentCategory, setParentCategory] = useState<{ id: string; name: string } | null>(null);
   const [childName, setChildName] = useState('');
@@ -340,7 +347,7 @@ const InlineCategoryManager = ({
 // COMPONENTE PRINCIPAL
 // ═════════════════════════════════════════════════════════════════════════════
 export default function AdminPanel() {
-  const [view, setView] = useState<'catalog' | 'settings' | 'create'>('catalog');
+  const [view, setView] = useState<'catalog' | 'settings' | 'create' | 'edit'>('catalog');
   const [products, setProducts] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -351,10 +358,10 @@ export default function AdminPanel() {
   const [categoryTree, setcategoryTree] = useState<Record<string, CategoryNode>>({});
 
 
-  const [rawCategories, setRawCategories] = useState<string[]>([]);
+  const [rawCategories, setRawCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [expandedCats, setExpandedCats] = useState<Record<string, boolean>>({});
-  const [EditingProductId, setEditingProductId] = useState<string | null>(null);
+  const [EditingProductId, setEditingProductId] = useState<any>(null);
 
   const [config, setConfig] = useState({
     patch_price: 10000,
@@ -422,12 +429,13 @@ export default function AdminPanel() {
   // ── Cargar categorías ──────────────────────────────────────────────────
 // ── Cargar categorías con Ruta Jerárquica Completa ──────────────────────────
 const fetchAllCategories = async () => {
-  // 1. Traemos los datos completos de la tabla de categorías
   const { data } = await supabase.from('categories').select('id, name, parent_id');
   
   if (data) {
+	setRawCategories(data);
     const map: Record<string, any> = {};
     const tree: Record<string, any> = {};
+	
 
     // Primero inicializamos el mapa básico con todos los registros
     data.forEach(item => {
@@ -920,7 +928,18 @@ const resetForm = () => {
         message: `"${newProduct.name}" fue añadido al catálogo con éxito.`,
         type: 'success',
         action: () => {
-          setNewProduct({ name: '', price_custom: '', category: '', stock_quantity: 0, sizes: ['S', 'M', 'L', 'XL', 'XXL'], description: '', url_original: '' });
+          setNewProduct({ 
+		  name: '', 
+		  price_original: '',      // Agregado
+		  price_custom: '', 
+		  category: '', 
+		  stock_quantity: 0, 
+		  sizes: [], 
+		  description: '', 
+		  url_original: '',
+		  allow_dorsal: false,     // Agregado
+		  patches: []              // Agregado
+		});
           setUploadingImages([]); setImagePreviews([]);
           fetchAllCategories();
           setView('catalog');
