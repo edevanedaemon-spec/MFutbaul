@@ -529,7 +529,7 @@ const fetchAllCategories = async () => {
 
 // Genera el árbol de nombres para saber exactamente qué categoría seleccionas
 const getCategoryBreadcrumb = (catId: string): string => {
-  const cat = categories.find(c => c.id === catId);
+  const cat = rawCategories.find(c => c.id === catId);
   if (!cat) return '';
   if (!cat.parent_id) return cat.name;
   return `${getCategoryBreadcrumb(cat.parent_id)} > ${cat.name}`;
