@@ -386,7 +386,12 @@ const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
                        return (
                          <div key={field} className="space-y-2">
                             <label className="text-[10px] font-black uppercase text-gray-500">{field === 'age' ? 'Edad' : field === 'height' ? 'Estatura (cm)' : 'Peso (kg)'}</label>
-                            <input type="number" value={formData.sizing_profile[sizeCategory][field as any] || ''} onChange={(e) => handleSizingChange(sizeCategory, field, e.target.value)} className="w-full bg-black border border-white/10 rounded-xl h-12 px-4 text-sm outline-none focus:border-emerald-500" />
+                            <input 
+							  type="number" 
+							  value={(formData.sizing_profile as any)[sizeCategory][field] || ''} 
+							  onChange={(e) => handleSizingChange(sizeCategory, field, e.target.value)} 
+							  className="w-full bg-black border border-white/10 rounded-xl h-12 px-4 text-sm outline-none focus:border-emerald-500" 
+							/>
                          </div>
                        )
                     })}
@@ -400,32 +405,77 @@ const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
             </div>
 
             {/* SIDEBAR SUGERENCIAS */}
-            <div className="space-y-6">
-              <div className="bg-[#0a0a0a] border border-white/5 rounded-[2.5rem] p-8 sticky top-28">
-                <h3 className="font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2 mb-6">
-                  <Sparkles size={16} /> Talles Sugeridos
-                </h3>
-                <div className="space-y-6 text-[11px]">
-                  {/* Adultos */}
-                  <div className="space-y-4">
-                    <p className="text-gray-500 uppercase font-bold border-b border-white/5 pb-2">Línea Adultos</p>
-                    <div className="flex justify-between"><span className="text-gray-400">Fan:</span><span className="font-bold text-emerald-400">{getRecommendedSize('fans', formData.sizing_profile.masculino)}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-400">Player:</span><span className="font-bold text-emerald-400">{getRecommendedSize('player', formData.sizing_profile.masculino)}</span></div>
-                  </div>
-                  {/* Femenino */}
-                  <div className="space-y-4 pt-4 border-t border-white/5">
-                    <p className="text-gray-500 uppercase font-bold border-b border-white/5 pb-2">Línea Femenina</p>
-                    <div className="flex justify-between"><span className="text-gray-400">Talle:</span><span className="font-bold text-emerald-400">{getRecommendedSize('women', formData.sizing_profile.femenino)}</span></div>
-                  </div>
-                  {/* Infantil */}
-                  <div className="space-y-4 pt-4 border-t border-white/5">
-                    <p className="text-gray-500 uppercase font-bold border-b border-white/5 pb-2">Línea Kids / Infantiles</p>
-                    <div className="flex justify-between"><span className="text-gray-400">Conjunto:</span><span className="font-bold text-emerald-400">{getRecommendedSize('kids_jersey', formData.sizing_profile.infantil)}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-400">Tracksuit:</span><span className="font-bold text-emerald-400">{getRecommendedSize('kids_tracksuit', formData.sizing_profile.infantil)}</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+				<div className="space-y-6">
+				  <div className="bg-[#0a0a0a] border border-white/5 rounded-[2.5rem] p-8 sticky top-28">
+					<h3 className="font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2 mb-6">
+					  <Sparkles size={16} /> Talles Sugeridos
+					</h3>
+					<div className="space-y-6 text-[11px]">
+					  
+					  {/* Adultos */}
+					  <div className="space-y-4">
+						<p className="text-gray-500 uppercase font-bold border-b border-white/5 pb-2">Línea Adultos</p>
+						<div className="flex justify-between">
+							<span className="text-gray-400">Fan:</span>
+							<span className="font-bold text-emerald-400">
+								{getRecommendedSize('fans', { 
+									height: Number(formData.sizing_profile.masculino.height) || 0, 
+									weight: Number(formData.sizing_profile.masculino.weight) || 0 
+								})}
+							</span>
+						</div>
+						<div className="flex justify-between">
+							<span className="text-gray-400">Player:</span>
+							<span className="font-bold text-emerald-400">
+								{getRecommendedSize('player', { 
+									height: Number(formData.sizing_profile.masculino.height) || 0, 
+									weight: Number(formData.sizing_profile.masculino.weight) || 0 
+								})}
+							</span>
+						</div>
+					  </div>
+
+					  {/* Femenino */}
+					  <div className="space-y-4 pt-4 border-t border-white/5">
+						<p className="text-gray-500 uppercase font-bold border-b border-white/5 pb-2">Línea Femenina</p>
+						<div className="flex justify-between">
+							<span className="text-gray-400">Talle:</span>
+							<span className="font-bold text-emerald-400">
+								{getRecommendedSize('women', { 
+									height: Number(formData.sizing_profile.femenino.height) || 0, 
+									weight: Number(formData.sizing_profile.femenino.weight) || 0 
+								})}
+							</span>
+						</div>
+					  </div>
+
+					  {/* Infantil */}
+					  <div className="space-y-4 pt-4 border-t border-white/5">
+						<p className="text-gray-500 uppercase font-bold border-b border-white/5 pb-2">Línea Kids / Infantiles</p>
+						<div className="flex justify-between">
+							<span className="text-gray-400">Conjunto:</span>
+							<span className="font-bold text-emerald-400">
+								{getRecommendedSize('kids_jersey', { 
+									height: Number(formData.sizing_profile.infantil.height) || 0, 
+									weight: Number(formData.sizing_profile.infantil.weight) || 0,
+									age: Number(formData.sizing_profile.infantil.age) || 0
+								})}
+							</span>
+						</div>
+						<div className="flex justify-between">
+							<span className="text-gray-400">Tracksuit:</span>
+							<span className="font-bold text-emerald-400">
+								{getRecommendedSize('kids_tracksuit', { 
+									height: Number(formData.sizing_profile.infantil.height) || 0, 
+									weight: Number(formData.sizing_profile.infantil.weight) || 0,
+									age: Number(formData.sizing_profile.infantil.age) || 0
+								})}
+							</span>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>
           </div>
         )}
 
