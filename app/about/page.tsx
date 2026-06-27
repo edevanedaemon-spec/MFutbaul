@@ -41,8 +41,13 @@ export default function AboutPage() {
 	  <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 		
 		{/* Contenedor de la imagen */}
-		<div className="relative aspect-square max-w-md mx-auto lg:mx-0">
+		{/* Contenedor de la imagen */}
+		{/* He añadido h-[300px] para móviles y h-auto para desktops */}
+		<div className="relative h-[300px] sm:h-[400px] lg:h-auto lg:aspect-square max-w-md w-full mx-auto lg:mx-0">
+		  
+		  {/* Capa decorativa (ajustada para que no estorbe si es necesario) */}
 		  <div className="absolute inset-0 border-2 border-emerald-500 rounded-[3rem] translate-x-4 translate-y-4" />
+		  
 		  <div className="relative w-full h-full rounded-[3rem] overflow-hidden border border-white/10">
 			<Image
 			  src="https://hnyznuojbnohzkwjraxt.supabase.co/storage/v1/object/public/assets/MoisesBento.png"
@@ -50,6 +55,7 @@ export default function AboutPage() {
 			  fill
 			  className="object-cover"
 			  priority
+			  sizes="(max-width: 768px) 100vw, 50vw" // Importante para rendimiento con 'fill'
 			/>
 		  </div>
 		</div>
