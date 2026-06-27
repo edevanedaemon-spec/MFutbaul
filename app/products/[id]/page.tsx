@@ -1006,6 +1006,25 @@ if (dorsalOptions.length === 0 && product?.allow_dorsal) {
             </div>
           </div>
         </div>
+		
+		{/* Descripción del producto */}
+		{product?.description && (
+		  <div className="mt-8 p-6 bg-white/[0.02] border border-white/10 rounded-3xl space-y-4">
+			<div className="flex items-center gap-3">
+			  <div className="p-2 bg-emerald-500/10 text-emerald-500 rounded-xl">
+				<ShieldCheck size={18} />
+			  </div>
+			  <h3 className="text-xs font-black tracking-widest text-white uppercase">
+				Detalles del producto
+			  </h3>
+			</div>
+			
+			{/* LA CLAVE: whitespace-pre-line respeta los saltos de línea (\n) del texto plano */}
+			<p className="text-sm text-gray-400 leading-relaxed pl-1 whitespace-pre-line">
+			  {product.description}
+			</p>
+		  </div>
+		)}
 
         {/* --- NUEVA SECCIÓN DE COMENTARIOS Y RESEÑAS --- */}
         <section id="review-form-section" className="mt-24 pt-16 border-t border-white/5">
