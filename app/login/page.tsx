@@ -28,9 +28,6 @@ export default function LoginPage() {
       if (error) {
         setMessage(error.message);
       } else {
-        await supabase.from('profiles').insert([
-          { id: data.user?.id, email, full_name: fullName, whatsapp: whatsapp }
-        ]);
         setMessage('¡Registro exitoso! Ya puedes iniciar sesión.');
         setIsRegistering(false);
       }
