@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: Ping Supabase Table
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/categories?limit=1" \
+          # Realiza el ping y guarda el resultado
+          RESPONSE=$(curl -s -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/categories?limit=1" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          
+          # Imprime un mensaje claro en los logs de GitHub
+          echo "Supabase respondió: $RESPONSE"
+          echo "Ping ejecutado con éxito en $(date)"
