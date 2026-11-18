@@ -178,6 +178,19 @@ export default function ProductPage() {
     }
   };
 
+  // Parseo seguro de image_urls (array nativo, JSON string o doble stringify)
+  const parseImageUrls = (raw: any): string[] => {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    try {
+      let p = JSON.parse(raw);
+      if (typeof p === 'string') p = JSON.parse(p);
+      return Array.isArray(p) ? p : [];
+    } catch (e) {
+      return typeof raw === 'string' ? [raw] : [];
+    }
+  };
+
   const parseSizesField = (sizesField: any): string[] => {
     if (!sizesField) return [];
     if (Array.isArray(sizesField)) return sizesField;
@@ -313,28 +326,7 @@ const checkPurchaseVerification = async (userId: string, productId: string) => {
       let targetProduct = null;
       if (productData) {
         // ─── PARSEO SEGURO DE IMAGE_URLS ───────────────────────────────────
-        let parsedImages: string[] = [];
-        if (productData.image_urls) {
-          if (Array.isArray(productData.image_urls)) {
-            // Si ya es un array nativo, lo usamos directamente
-            parsedImages = productData.image_urls;
-          } else {
-            try {
-              // Intentamos el primer parseo JSON
-              let p = JSON.parse(productData.image_urls);
-              // Si el resultado sigue siendo un string (por el doble stringify), lo parseamos una segunda vez
-              if (typeof p === 'string') {
-                p = JSON.parse(p);
-              }
-              parsedImages = Array.isArray(p) ? p : [];
-            } catch (e) {
-              // Si no era un JSON válido pero es un string común, lo guardamos como único elemento
-              parsedImages = typeof productData.image_urls === 'string' ? [productData.image_urls] : [];
-            }
-          }
-        }
-        // Sobrescribimos la propiedad con el array nativo limpio de JS
-        productData.image_urls = parsedImages;
+        productData.image_urls = parseImageUrls(productData.image_urls);
         // ───────────────────────────────────────────────────────────────────
 
         setProduct(productData);
@@ -357,7 +349,12 @@ const checkPurchaseVerification = async (userId: string, productId: string) => {
           .neq('id', id)
           .limit(4);
         
-        setSuggested(suggestions || []);
+        setSuggested(
+          (suggestions || []).map((s: any) => ({
+            ...s,
+            image_urls: parseImageUrls(s.image_urls),
+          }))
+        );
       }
 
       const { data: { session } } = await supabase.auth.getSession();
