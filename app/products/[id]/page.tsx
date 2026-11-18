@@ -1215,7 +1215,7 @@ if (dorsalOptions.length === 0 && product?.allow_dorsal) {
               {suggested.map((item: any) => {
                 const itemPriceGs = item.price_custom && item.price_custom > 0 ? item.price_custom : getProductFallbackPrice(item.name);
                 return (
-                  <Link href={`/catalog/${item.id}`} key={item.id} className="group bg-white/5 border border-white/5 rounded-[2rem] p-6 hover:border-white/10 transition-all flex flex-col justify-between">
+                  <Link href={`/products/${item.id}`} key={item.id} className="group bg-white/5 border border-white/5 rounded-[2rem] p-6 hover:border-white/10 transition-all flex flex-col justify-between">
                     <div className="aspect-square bg-white/5 rounded-2xl overflow-hidden p-6 mb-4 flex items-center justify-center relative">
                       <img src={item.image_urls?.[0]} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-500" alt="" />
                     </div>
